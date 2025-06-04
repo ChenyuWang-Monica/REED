@@ -1,4 +1,4 @@
-# REED - molecule generation
+# REED - Molecule Generation
 
 This folder is the pytorch implementation of the molecule generation tasks in REED. This branch is largely based on the [GeoRCG](https://arxiv.org/abs/2410.03655) codebase, which supports both EDM and SemlaFlow base models on both QM9 and GEOM-DRUG datasets. In our paper, we focus on the state-of-the-art SemlaFlow base model and use the more challenging GEOM-DRUG dataset to illustrate the effectiveness of REED. We leverage the representation alignment method instead of the representation conditioning method in GeoRCG.
 
