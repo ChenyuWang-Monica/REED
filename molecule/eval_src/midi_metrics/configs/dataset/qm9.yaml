@@ -1,6 +1,0 @@
-name: 'qm9'            # qm9, qm9_positional
-datadir: 'data/qm9_midi'
-remove_h: False
-random_subset: null
-pin_memory: False
-adaptive_loader: False
