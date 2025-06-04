@@ -1,0 +1,12 @@
+defaults:
+  - qm9_rdm: qm9_rdm_unconditional
+  - _self_
+
+
+
+hydra:
+  sweep:
+    dir: ./hydra_logs/rdm_train/qm9/${qm9_rdm.rdm_args.exp_name}_${now:%Y-%m-%d_%H-%M-%S}/
+  run:
+    dir: ./hydra_logs/rdm_train/qm9/${qm9_rdm.rdm_args.exp_name}_${now:%Y-%m-%d_%H-%M-%S}/
+

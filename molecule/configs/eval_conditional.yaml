@@ -1,0 +1,38 @@
+defaults:
+  - _self_
+
+hydra:
+  sweep:
+    dir: ./hydra_logs/eval_conditional/${version}_${property}_${now:%Y-%m-%d_%H-%M-%S}/
+  run:
+    dir: ./hydra_logs/eval_conditional/${version}_${property}_${now:%Y-%m-%d_%H-%M-%S}/
+
+version: null
+
+
+exp_name: 'debug'
+classifiers_path: 'checkpoints/classifiers_ckpts/exp_class_alpha'
+property: 'alpha'  # options: 'alpha', 'homo', 'lumo', 'gap', 'mu', 'Cv'
+no_cuda: false  # enables CUDA training
+debug_break: false  # break point or not
+log_interval: 5  # break point or not
+batch_size: 500  # break point or not
+iterations: 19  # break point or not
+task: 'pcdm'  # options: 'naive', 'pcdm', 'qm9_second_half', 'qualitative'
+n_sweeps: 10  # number of sweeps for the qualitative conditional experiment
+
+pcdm_model_path: ???  # Specify model path
+cfg: 1.0
+
+sampler: PCSampler  # options: 'GtSampler', 'PCSampler', 'DDIMSampler'
+Gt_dataset: 'train'  # options: 'train', 'test', 'valid'
+encoder_type: 'frad'
+encoder_path: null
+
+rdm_ckpt: ???
+step_num: null
+eta: null
+
+inv_temp: 1.0
+n_steps: 5
+snr: 0.01  

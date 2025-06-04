@@ -1,0 +1,49 @@
+defaults:
+  - _self_
+
+hydra:
+  sweep:
+    dir: ./hydra_logs/eval_visualize_samples/${version}_${now:%Y-%m-%d_%H-%M-%S}/
+  run:
+    dir: ./hydra_logs/eval_visualize_samples/${version}_${now:%Y-%m-%d_%H-%M-%S}/
+
+version: null
+
+# General Options
+save_molecules: false
+saved_molecules_path: null
+
+# If you use saved molecules for analysis, please specify a dataset so that the info can be loaded. (If not use the saved ones, dataset info will be retrieved from pcdm args.)
+dataset: ???
+remove_h: ???
+
+# Sample Parameters
+n_samples: 50
+batch_size_gen: 50
+property: null
+
+# PCDM Sampler Parameters
+cfg: 1.0
+pcdm_model_path: ???
+
+# RDM Sampler Parameters
+sampler: GtSampler
+
+# GtSampler Parameters
+Gt_dataset: train
+encoder_type: frad
+encoder_path: ???
+
+# DDIMSampler Parameters
+rdm_ckpt: ???
+step_num: 5
+eta: 1.0
+
+# PCSampler Parameters (includes rdm_ckpt)
+inv_temp: 1.0
+n_steps: 5
+snr: 0.01
+
+sweep: false
+start_value: null
+end_value: null

@@ -1,0 +1,32 @@
+defaults:
+  - _self_
+
+
+hydra:
+  sweep:
+    dir: ./hydra_logs/monitor/${now:%Y-%m-%d_%H-%M-%S}/
+  run:
+    dir: ./hydra_logs/monitor/${now:%Y-%m-%d_%H-%M-%S}/
+
+
+IAI: true
+IAI_job_name: drug
+nodelist: hgx001
+gres: "gpu:2"
+time: "72:00:00"
+hgx: 16gpu-hgx
+partition: IAI_SLURM_HGX
+
+
+DDP: true
+DDP_port: 29000
+DDP_nproc_per_node: 2
+
+subprocess_args: "pcdm_args.exp_name=unimol_noise0.4"
+monitor_interval: 10 # Check every two minites
+
+output_dir: outputs # The checkpoint dir
+version_arg_name: "pcdm_args.exp_name" # The arg name of the version, which is used to save ckpt. This enables the monitor to extract the checkpoint name
+last_ckpt_name: null
+resume_arg_name: "pcdm_args.resume" # This enables the monitor to set the resuming.
+script_name: self_condition_train_drug

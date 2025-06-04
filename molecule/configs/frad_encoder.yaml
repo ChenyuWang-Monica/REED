@@ -1,0 +1,30 @@
+encoder_args:
+  encoder_model: 'equivariant-transformer' 
+
+  # architectural args
+  embedding_dimension: 256 # Embedding dimension
+  num_layers: 8 # Number of interaction layers in the model
+  num_rbf: 64 # Number of radial basis functions in model
+  activation: 'silu' # Activation function
+  rbf_type: 'expnorm' # Type of distance expansion
+  trainable_rbf: false # If distance expansion functions should be trainable
+  neighbor_embedding: true # If a neighbor embedding should be applied before interactions
+  aggr: 'add' # Aggregation operation for CFConv filter output. Must be one of 'add', 'mean', or 'max'
+
+  # Transformer specific
+  distance_influence: 'both' # Where distance information is included inside the attention
+  attn_activation: 'silu' # Attention activation function
+  num_heads: 8 # Number of attention heads
+  layernorm_on_vec: whitened # Whether to apply an equivariant layer norm to vec features. Off by default.
+
+  # other args
+  derivative: false # If true, take the derivative of the prediction w.r.t coordinates
+  cutoff_lower: 0.0 # Lower cutoff in model
+  cutoff_upper: 5.0 # Upper cutoff in model
+  atom_filter: -1 # Only sum over atoms with Z > atom_filter
+  max_z: 100 # Maximum atomic number that fits in the embedding matrix
+  max_num_neighbors: 32 # Maximum number of neighbors to consider in the network
+  standardize: true # If true, multiply prediction by dataset std and add mean
+  reduce_op: 'add' # Reduce operation to apply to atomic predictions
+  md17: false # is md17 test set.
+  seperate_noise: false # seperate noise.
