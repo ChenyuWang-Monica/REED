@@ -1,0 +1,34 @@
+# @package _global_
+general:
+    name : 'h_ada_sampling'
+    gpus : 1
+    wandb: 'online'
+    resume: null
+
+    num_final_sampling: 5
+    final_model_samples_to_generate: 10000
+    final_model_samples_to_save: 10
+    final_model_chains_to_save: 4
+train:
+    n_epochs: 10000
+    batch_size: 256
+    save_model: True
+    lambda_train: [3, 0.4, 1, 2, 0]
+
+model:
+    n_layers: 12
+    nu:
+        p: 2.5
+        x: 1
+        c: 1
+        e: 1.5
+        y: 1
+    extra_features: null
+
+dataset:
+    name: 'qm9'            # qm9, qm9_positional
+    datadir: 'data/qm9/qm9_pyg/'
+    random_subset: null
+    pin_memory: False
+    adaptive_loader: False
+    remove_h: False

@@ -1,0 +1,20 @@
+# @package _global_
+general:
+    name : 'geom-no-h-uniform-sampling'
+    gpus : 2
+    wandb: 'online'
+train:
+    n_epochs: 500
+    batch_size: 350
+    reference_batch_size: 350
+    save_model: True
+model:
+    n_layers: 12
+    lambda_train: [3, 0.4, 1, 2, 0 ]
+dataset:
+    name: 'geom'
+    datadir: 'data/geom/'
+    remove_h: True
+    random_subset: null
+    pin_memory: True
+    adaptive_loader: True

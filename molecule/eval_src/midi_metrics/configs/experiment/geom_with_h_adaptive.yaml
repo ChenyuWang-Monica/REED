@@ -1,0 +1,29 @@
+# @package _global_
+general:
+    name : 'geom-with-h-adaptive'
+    gpus : 2
+    wandb: 'online'
+    test_only: null
+    resume: null
+train:
+    n_epochs: 1000
+    batch_size: 200
+    reference_batch_size: 350
+    save_model: True
+    lr: 0.0002
+model:
+    n_layers: 12
+    lambda_train: [5, 0.4, 1, 2, 0]
+    nu:
+      p: 2.5
+      x: 1
+      c: 1
+      e: 1.5
+      y: 1
+dataset:
+    name: 'geom'
+    datadir: 'data/geom/'
+    remove_h: False
+    random_subset: null
+    pin_memory: True
+    adaptive_loader: True
