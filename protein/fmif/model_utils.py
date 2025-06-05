@@ -17,30 +17,18 @@ MASK_TOKEN_INDEX = ALPHABET_WITH_MASK.index(MASKED_TOKEN)
 def featurize(batch, device, repr_dims, load_repr=True):
     B = len(batch)
     lengths = np.array([len(b['seq']) for b in batch], dtype=np.int32)  # sum of chain seq lengths
-    # lengths = torch.tensor([len(b['seq']) for b in batch], dtype=torch.int32, device=device)
-    # L_max = lengths.max().item()
     L_max = max([len(b['seq']) for b in batch])
     X = np.zeros([B, L_max, 4, 3])
-    # X = torch.full((B, L_max, 4, 3), float('nan'), dtype=torch.float32, device=device)
     residue_idx = -100 * np.ones([B, L_max], dtype=np.int32)  # residue idx with jumps across chains
-    # residue_idx = torch.full((B, L_max), -100, dtype=torch.long, device=device)
     chain_M = np.zeros([B, L_max], dtype=np.int32)  # 1.0 for the bits that need to be predicted, 0.0 for the bits that are given
-    # chain_M = torch.zeros([B, L_max], dtype=torch.int64, device=device)
     mask_self = np.ones([B, L_max, L_max], dtype=np.int32)  # for interface loss calculation - 0.0 for self interaction, 1.0 for other
-    # mask_self = torch.ones([B, L_max, L_max], dtype=torch.int64, device=device)
     chain_encoding_all = np.zeros([B, L_max], dtype=np.int32)  # integer encoding for chains 0, 0, 0,...0, 1, 1,..., 1, 2, 2, 2...
-    # chain_encoding_all = torch.zeros([B, L_max], dtype=torch.long, device=device)
-
-    # TODO (done): check the dimensions!
+    
     repr_single = np.zeros([B, L_max, repr_dims['single']], dtype=np.float32)  # single residue representation
     repr_pair = np.zeros([B, L_max, L_max, repr_dims['pair']], dtype=np.float32)  # pairwise residue representation
     repr_structure = np.zeros([B, L_max, repr_dims['structure']], dtype=np.float32)  # structure representation
-    # repr_single = torch.zeros([B, L_max, repr_dims['single']], dtype=torch.float32, device=device)  # single residue representation
-    # repr_pair = torch.zeros([B, L_max, L_max, repr_dims['pair']], dtype=torch.float32, device=device)  # pairwise residue representation
-    # repr_structure = torch.zeros([B, L_max, repr_dims['structure']], dtype=torch.float32, device=device)  # structure representation
 
     S = np.zeros([B, L_max], dtype=np.int32)  # sequence AAs integers
-    # S = torch.zeros([B, L_max], dtype=torch.long, device=device)
     init_alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
                      'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
                      'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -85,13 +73,9 @@ def featurize(batch, device, repr_dims, load_repr=True):
                 chain_length = len(chain_seq)
                 chain_coords = b[f'coords_chain_{letter}']  # this is a dictionary
                 chain_mask = np.zeros(chain_length)  # 0.0 for visible chains
-                # chain_mask = torch.zeros(chain_length, dtype=torch.int64, device=device)
                 x_chain = np.stack([chain_coords[c] for c in
                                     [f'N_chain_{letter}', f'CA_chain_{letter}', f'C_chain_{letter}',
                                      f'O_chain_{letter}']], 1)  # [chain_length,4,3]
-                # x_chain = torch.stack([torch.tensor(chain_coords[c], dtype=torch.float32, device=device) for c in
-                #                         [f'N_chain_{letter}', f'CA_chain_{letter}', f'C_chain_{letter}',
-                #                          f'O_chain_{letter}']], 1)
                 x_chain_list.append(x_chain)
                 chain_mask_list.append(chain_mask)
                 chain_seq_list.append(chain_seq)
@@ -104,9 +88,7 @@ def featurize(batch, device, repr_dims, load_repr=True):
 
                 l1 += chain_length
                 mask_self[i, l0:l1, l0:l1] = np.zeros([chain_length, chain_length])
-                # mask_self[i, l0:l1, l0:l1] = torch.zeros([chain_length, chain_length], dtype=torch.int64, device=device)
                 residue_idx[i, l0:l1] = 100 * (c - 1) + np.arange(l0, l1)
-                # residue_idx[i, l0:l1] = 100 * (c - 1) + torch.arange(l0, l1, device=device).long()
                 l0 += chain_length
                 c += 1
             elif letter in masked_chains:
@@ -118,14 +100,10 @@ def featurize(batch, device, repr_dims, load_repr=True):
                 x_chain = np.stack([chain_coords[c] for c in
                                     [f'N_chain_{letter}', f'CA_chain_{letter}', f'C_chain_{letter}',
                                      f'O_chain_{letter}']], 1)  # [chain_lenght,4,3]
-                # x_chain = torch.stack([torch.tensor(chain_coords[c], dtype=torch.float32, device=device) for c in
-                #                         [f'N_chain_{letter}', f'CA_chain_{letter}', f'C_chain_{letter}',
-                #                          f'O_chain_{letter}']], 1)
                 x_chain_list.append(x_chain)
                 chain_mask_list.append(chain_mask)
                 chain_seq_list.append(chain_seq)
                 chain_encoding_list.append(c * np.ones(np.array(chain_mask).shape[0]))
-                # chain_encoding_list.append(c * torch.ones(chain_mask.shape[0], dtype=torch.long, device=device))
                 if load_repr:
                     repr_single_list.append(b[f'repr_single_{letter}'])
                     repr_pair_list.append(b[f'repr_pair_{letter}'])
@@ -139,55 +117,31 @@ def featurize(batch, device, repr_dims, load_repr=True):
                 l0 += chain_length
                 c += 1
         x = np.concatenate(x_chain_list, 0)  # [L, 4, 3]
-        # x = torch.cat(x_chain_list, 0)
         all_sequence = "".join(chain_seq_list)
         m = np.concatenate(chain_mask_list, 0)  # [L,], 1.0 for places that need to be predicted
-        # m = torch.cat(chain_mask_list, 0)
         chain_encoding = np.concatenate(chain_encoding_list, 0)
-        # chain_encoding = torch.cat(chain_encoding_list, 0)
-        if load_repr:
-            repr_s = np.concatenate(repr_single_list, 0)
-            repr_p = np.concatenate(repr_pair_list, 0)
-            repr_st = np.concatenate(repr_structure_list, 0)
-            # repr_s = torch.cat(repr_single_list)
-            # repr_p = torch.cat(repr_pair_list)
-            # repr_st = torch.cat(repr_structure_list)
-
 
         l = len(all_sequence)
-        # x_pad = np.pad(x, [[0, L_max - l], [0, 0], [0, 0]], 'constant', constant_values=(np.nan,))
-        # X[i, :, :, :] = x_pad
         X[i, :l, :, :] = x
 
-        # m_pad = np.pad(m, [[0, L_max - l]], 'constant', constant_values=(0.0,))
-        # chain_M[i, :] = m_pad
         chain_M[i, :l] = m
 
-        # chain_encoding_pad = np.pad(chain_encoding, [[0, L_max - l]], 'constant', constant_values=(0.0,))
-        # chain_encoding_all[i, :] = chain_encoding_pad
         chain_encoding_all[i, :l] = chain_encoding
 
         # pad repr_single, repr_pair, repr_structure, they have shape [L, hidden_dim], [L, L, hidden_dim], [L, hidden_dim]
         if load_repr:
-            # repr_single_pad = np.pad(repr_s, [[0, L_max - l], [0, 0]], 'constant', constant_values=(0.0,))
-            # repr_pair_pad = np.pad(repr_p, [[0, L_max - l], [0, L_max - l], [0, 0]], 'constant', constant_values=(0.0,))
-            # repr_structure_pad = np.pad(repr_st, [[0, L_max - l], [0, 0]], 'constant', constant_values=(0.0,))
-            # repr_single[i, :, :] = repr_single_pad
-            # repr_pair[i, :, :, :] = repr_pair_pad
-            # repr_structure[i, :, :] = repr_structure_pad
+            repr_s = np.concatenate(repr_single_list, 0)
+            repr_p = np.concatenate(repr_pair_list, 0)
+            repr_st = np.concatenate(repr_structure_list, 0)
             repr_single[i, :l, :] = repr_s
             repr_pair[i, :l, :l, :] = repr_p
             repr_structure[i, :l, :] = repr_st
 
         indices = np.asarray([ALPHABET.index(a) for a in all_sequence], dtype=np.int32)
         S[i, :l] = indices
-        # indices = torch.tensor([ALPHABET.index(a) for a in all_sequence], dtype=torch.long, device=device)
-        # S[i, :l] = indices
 
     isnan = np.isnan(X)
-    # isnan = torch.isnan(X)
     mask = np.isfinite(np.sum(X, (2, 3))).astype(np.float32)
-    # mask = torch.isfinite(torch.sum(X, (2, 3))).to(dtype=torch.float32, device=device)
     X[isnan] = 0.
 
     # Conversion
@@ -202,9 +156,6 @@ def featurize(batch, device, repr_dims, load_repr=True):
         repr_single = torch.from_numpy(repr_single).to(dtype=torch.float32, device=device)
         repr_pair = torch.from_numpy(repr_pair).to(dtype=torch.float32, device=device)
         repr_structure = torch.from_numpy(repr_structure).to(dtype=torch.float32, device=device)
-        # repr_single = repr_single.to(dtype=torch.float32, device=device)
-        # repr_pair = repr_pair.to(dtype=torch.float32, device=device)
-        # repr_structure = repr_structure.to(dtype=torch.float32, device=device)
     else:
         repr_single = None
         repr_pair = None
@@ -613,12 +564,9 @@ class ProteinMPNNFMIF(nn.Module):
             self.cls_layers_enc = nn.ModuleList([nn.Linear(hidden_dim, hidden_dim) for _ in range(num_encoder_layers)])
             self.cls_layers_dec = nn.ModuleList([nn.Linear(hidden_dim, hidden_dim) for _ in range(num_decoder_layers)])
 
-        # TODO (done): check the dimensions and turn it into values in args
-        # TODO (done): currently projector_dim is set to 1024, turn it into an args later
         self.projectors_single = build_mlp(hidden_dim, single_dim * 2, single_dim)
         self.projectors_pair = build_mlp(hidden_dim * 2, pair_dim * 2, pair_dim)
         self.projectors_structure = build_mlp(hidden_dim, structure_dim * 2, structure_dim)
-        # TODO: hidden_dim is much smaller than structure_dim
 
     def finetune_init(self):
         self.W_s_ft = nn.Linear(self.vocab, self.hidden_dim, bias=False).cuda()
@@ -636,8 +584,6 @@ class ProteinMPNNFMIF(nn.Module):
         # h_V: [batch_size, seq_length, hidden_dim]
         # E, h_E: [batch_size, seq_length, num_edge, (edge_features=)hidden_dim]
         # E_idx: [batch_size, seq_length, num_edge]
-        # TODO: slice repr with E_idx
-        # TODO: use the last layer or the second last?
 
         if cls is not None:
             cls_emb = self.cls_embedder(cls)
@@ -694,10 +640,8 @@ class ProteinMPNNFMIF(nn.Module):
             zs_single = zs_single.detach()
             zs_pair = zs_pair.detach()
             zs_structure = zs_structure.detach()
-        # print(zs_single.size(), zs_pair.size(), zs_structure.size(), E_idx.size())
         zs_single = self.projectors_single(zs_single.view(-1, zs_single.size(-1))).view(zs_single.size(0),
                                                                                         zs_single.size(1), -1)
-        # TODO: will this be too large when seq_length is large?
         zs_pair = self.projectors_pair(zs_pair.view(-1, zs_pair.size(-1))).view(zs_pair.size(0), zs_pair.size(1),
                                                                                 zs_pair.size(2), -1)
         zs_structure = self.projectors_structure(zs_structure.view(-1, zs_structure.size(-1))).view(
