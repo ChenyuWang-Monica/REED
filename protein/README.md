@@ -6,7 +6,7 @@ The codebase is modified from [MultiFlow](https://github.com/jasonkyuyim/multifl
 
 ## Precomputing AlphaFold3 Embeddings
 
-We use a modified version of AlphaFold3 code to obtain protein representations. Details can be found in the REED-AlphaFold3 branch.
+We use a modified version of AlphaFold3 code to obtain protein representations. Details can be found in the [REED-AlphaFold3](https://github.com/ChenyuWang-Monica/REED/tree/AlphaFold3-REED) branch.
 
 ## Training Discrete Diffusion Models
 
