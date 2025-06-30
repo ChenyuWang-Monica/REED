@@ -61,3 +61,4 @@ torchrun --nnodes=1 --nproc_per_node=4 generate.py \
     --cfg-scale=1.0 \
     --sample-dir YOUR_SAMPLE_SAVING_PATH
 ```
+For classifier-free guidance results, set `--cfg-scale=1.275`.
