@@ -1,6 +1,6 @@
 # Learning Diffusion Models with Flexible Representation Guidance
 
-The repository contains the code for the `REED` method presented in the paper: *Learning Diffusion Models with Flexible Representation Guidance*. `REED` presents a comprehensive framework for representation-enhanced diffusion model training, combining theoretical analysis, multimodal representation alignment strategies, an effective training curriculum, and practical domain-specific instantiations (image, protein sequence, and molecule). 
+The repository contains the code for the `REED` method presented in the paper: *[Learning Diffusion Models with Flexible Representation Guidance](https://arxiv.org/pdf/2507.08980)*. `REED` presents a comprehensive framework for representation-enhanced diffusion model training, combining theoretical analysis, multimodal representation alignment strategies, an effective training curriculum, and practical domain-specific instantiations (image, protein sequence, and molecule). 
 
 <img src="figs/nspeed.png" alt="drawing" width="500"/>
 
@@ -14,3 +14,14 @@ For protein inverse folding, `REED` accelerates training by $3.6\times$ and yiel
 
 ## Molecule Generation
 For molecule generation, `REED` improves metrics such as atom and molecule stability, validity, energy, and strain on the challenging Geom-Drug datasets. The detailed code and instructions are in `molecule/`.
+
+## Citation
+If you find this work useful in your research, please cite:
+```
+@article{wang2025learning,
+  title={Learning Diffusion Models with Flexible Representation Guidance},
+  author={Chenyu Wang and Cai Zhou and Sharut Gupta and Zongyu Lin and Stefanie Jegelka and Stephen Bates and Tommi Jaakkola},
+  journal={arXiv preprint arXiv:2507.08980},
+  year={2025}
+}
+```
