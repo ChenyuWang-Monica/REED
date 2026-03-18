@@ -24,7 +24,7 @@ To get started, you'll need the following dependencies:
 
 For the QM9 dataset, we leverage [Frad](https://github.com/fengshikun/Frad) as the geometric encoder. You can download the pre-trained weights [here](https://drive.google.com/file/d/1O6f6FzYogBS2Mp4XsdAAEN4arLtLH38G/view?usp=share_link).  
 
-For the GEOM-DRUG dataset, we pre-trained [Unimol](https://openreview.net/forum?id=6K2RM6wVqKu) using their official codebase on GEOM-DRUG dataset itself (only use the training dataset to avoid data leak). If you opt to use Unimol as the encoder, ensure you install [uni-core](https://github.com/dptech-corp/Uni-Core). A checkpoint of the finetuned Unimol encoder on GEOM-DRUG dataset is available in ./checkpoints/unimol_global.pt.
+For the GEOM-DRUG dataset, we pre-trained [Unimol](https://openreview.net/forum?id=6K2RM6wVqKu) using their official codebase on GEOM-DRUG dataset itself (only use the training dataset to avoid data leak). If you opt to use Unimol as the encoder, ensure you install [uni-core](https://github.com/dptech-corp/Uni-Core). A checkpoint of the finetuned Unimol encoder on GEOM-DRUG dataset is available in the repo of [GeoRCG](https://github.com/GraphPKU/GeoRCG).
 
 ### Dataset
 
